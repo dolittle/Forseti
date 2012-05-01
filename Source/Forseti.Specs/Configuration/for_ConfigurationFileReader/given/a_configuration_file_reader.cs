@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Forseti.Configuration;
 using Forseti.Files;
 using Forseti.Harnesses;
+using Forseti.Scripting;
 using Machine.Specifications;
 using Moq;
 using Forseti.Frameworks;

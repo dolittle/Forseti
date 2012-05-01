@@ -52,6 +52,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Configuration\for_ConfigurationFileReader\given\a_configuration_file_reader_and_a_configure_instance.cs" />
+    <Compile Include="Configuration\for_ConfigurationFileReader\when_applying_a_file_with_dependencies.cs" />
+    <Compile Include="Configuration\for_ConfigurationFileReader\when_applying_a_file_with_global_dependencies.cs" />
     <Compile Include="Configuration\for_ConfigureExtensions\when_applying_from_configuration_file.cs" />
     <Compile Include="Files\for_File\when_getting_full_path_and_folder_has_trailing_slash.cs" />
     <Compile Include="Files\for_File\when_getting_full_path_and_folder_is_not_set.cs" />

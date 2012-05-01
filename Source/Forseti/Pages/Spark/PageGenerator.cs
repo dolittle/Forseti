@@ -46,15 +46,13 @@ namespace Forseti.Pages.Spark
             if (!Directory.Exists(page.RootPath))
                 Directory.CreateDirectory(page.RootPath);
 
-            var dependenciesFile = "dependencies.config";
-            if (File.Exists(dependenciesFile))
+            if (harness.HasDependencies())
             {
                 var actualDependencies = new List<string>();
-                var dependencies = File.ReadAllLines(dependenciesFile);
-                foreach (var dependency in dependencies)
+                foreach (var dependency in harness.Dependencies)
                 {
-                    CopyScript(page.RootPath, dependency);
-                    actualDependencies.Add(dependency);
+                    CopyScript(page.RootPath, dependency.RelativePath);
+                    actualDependencies.Add(dependency.RelativePath);
                 }
                 harnessView.Dependencies = actualDependencies.ToArray();
             } else {

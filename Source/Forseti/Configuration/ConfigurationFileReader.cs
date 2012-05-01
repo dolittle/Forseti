@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Yaml;
 using Forseti.Files;
 using Forseti.Harnesses;
@@ -46,7 +47,17 @@ namespace Forseti.Configuration
 			var fileContent = file.ReadAllText();
 			
 			var nodes = _yamlParser.Parse (fileContent);
-			var root = nodes.First () as YamlMapping;
+			var root = nodes.First() as YamlMapping;
+            var globalDependencies = new List<File>();
+
+            if(root != null && root.ContainsKey("Dependencies"))
+            {
+                var globalDependenciesConfig = root["Dependencies"] as YamlSequence;
+                globalDependencies = globalDependenciesConfig
+                                    .Select((node) => (File)((YamlScalar)node).Value)
+                                    .ToList();
+                
+            }
 			
 			if( root != null && root.ContainsKey("Harnesses") ) 
 			{
@@ -66,7 +77,19 @@ namespace Forseti.Configuration
 							harness.Name = ((YamlScalar)values["Name"]).Value;
 							harness.SystemsSearchPath = ((YamlScalar)values["SystemsSearchPath"]).Value;
 							harness.DescriptionsSearchPath = ((YamlScalar)values["DescriptionsSearchPath"]).Value;
-							_harnessManager.Add (harness);
+                            if (values.ContainsKey("Dependencies"))
+                            {
+                                var harnessDependencies =
+                                    ((YamlSequence) values["Dependencies"])
+                                    .Select((node) => (File)((YamlScalar) node).Value)
+                                    .ToList();
+
+                                globalDependencies.AddRange(harnessDependencies);
+
+                                globalDependencies.ForEach(harness.AddDependency);
+                            }
+
+						    _harnessManager.Add (harness);
 						}
 					}
 				}

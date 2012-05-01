@@ -26,13 +26,15 @@ On Windows you only need to open the solution and build it with Visual Studio, i
 # How to use #
 
 For now, the only thing up and running is the console runner. It relies on a configuration file that you need to create called *forseti.yaml* - its layout is like this : 
-
+	
 	Harnesses:
 		- Harness:
 			Framework				: [name of testing/specification framework]
 			Name					: [name of harness]
 			SystemsSearchPath		: [relative path from current directory]/{placeholders}.js
 			DescriptionsSearchPath	: [relative path from current directory]/{placeholders}.js
+			Dependencies            :
+			  - [relative path from current directory/harnessdependency.js]
 
 A concrete configuration could be something like this : 
 
@@ -42,12 +44,40 @@ A concrete configuration could be something like this :
           Name						: Something
           SystemsSearchPath			: Scripts/{system}.js
           DescriptionsSearchPath	: Specs/for_{system}/{description}.js
+          Dependencies              :
+            - Scripts/plugins/jquery.someplugin.js
 			
-In addition, Forseti has a temporary solution for specifying dependencies that it will load for every time it runs tests / specs. These are defined in a file called dependencies.config by just adding file-paths on a per line basis.
-
 Basically by configuring Forseti as above, you are setting up search paths that will represent your convention to where it finds systems you are testing / specifying and corresponding descriptions as we're calling it, but basically your tests / specs. You can create your own placeholders, there are for the time being no built in placeholders. You can also add another level if you're for instance using namespacing, you could easily have *'Scripts/{namespace}/{system}.js'*. For the time being, recursiveness in this mechanism is not supported. 
 
-One configured and Forseti is executed from the location of the Forseti.yaml file, it will start finding all systems and its corresponding tests / specs and then run everything that it has found. It will then sit there and wait till a new file is added, removed or modified and then run the impacted system and its corresponding tests / specs again.
+Once configured and Forseti is executed from the location of the Forseti.yaml file, it will start finding all systems and its corresponding tests / specs and then run everything that it has found. It will then sit there and wait till a new file is added, removed or modified and then run the impacted system and its corresponding tests / specs again.
+
+
+### Dependencies ###
+
+Forseti also supports multiple Harness', which can be useful when speccing different aspects of a system / multiple systems. In these cases there may be a mixed need for dependencies that can be resolved like so:
+
+	Dependencies:
+	  - Scripts/libs/jquery-1.7.2.min.js
+
+	Harnesses:
+	  - Harness
+          Framework					: Jasmine
+          Name						: Something
+          SystemsSearchPath			: Scripts/{system}.js
+          DescriptionsSearchPath	: Specs/for_{system}/{description}.js
+          Dependencies              :
+            - Scripts/plugins/jquery.someplugin.js
+
+	  - Harness
+          Framework					: Buster
+          Name						: Something
+          SystemsSearchPath			: Scripts/{system}.js
+          DescriptionsSearchPath	: Specs/for_{system}/{description}.js
+          Dependencies              :
+            - Scripts/legacy/legacy.js
+            - Scripts/legacy/ancient.js
+
+
 
 # Frameworks #
 Forseti supports multiple testing/specification frameworks. In the YAML file, you can for now specify either [Jasmine](http://pivotal.github.com/jasmine/) or [BusterJS](http://www.busterjs.org) as frameworks. But we are working on support of multiple others as well, amongst others [QUnit](http://docs.jquery.com/QUnit).

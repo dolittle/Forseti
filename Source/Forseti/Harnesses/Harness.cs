@@ -49,7 +49,7 @@ namespace Forseti.Harnesses
 			}
 		}
 		
-		public IEnumerable<IFile> Dependencies { get { return _dependencies; } }
+		public IEnumerable<IFile> Dependencies {get { return _dependencies; }}
         public IEnumerable<Suite> Suites { get { return _suites; } }
         public IEnumerable<Case> Cases { get; set; }
 
@@ -138,5 +138,14 @@ namespace Forseti.Harnesses
             return new Regex(pattern);
         }
 
+        public void AddDependency(IFile dependency)
+        {
+            _dependencies.Add(dependency);
+        }
+
+        public bool HasDependencies()
+        {
+            return _dependencies.Count > 0;
+        }
     }
 }

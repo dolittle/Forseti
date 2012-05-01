@@ -10,6 +10,7 @@ namespace Forseti.Specs.Configuration.for_ConfigurationFileReader
 	public class when_applying_a_file_with_a_harness_in_it : given.a_configuration_file_reader
 	{
 		const string harness_name = "Something";
+		const string framework_name = "SomeFrameWork";
 		const string systems_search_path = "Scripts";
 		const string descriptions_search_path = "Specs/for_{system}";
 		
@@ -24,6 +25,7 @@ namespace Forseti.Specs.Configuration.for_ConfigurationFileReader
 			config_node = YamlNode.FromYaml (
 "Harnesses:\n"+
 "  - Harness:\n"+
+"      Framework                : \"" + framework_name + "\"\n" + 
 "      Name						: \""+harness_name+"\"\n"+
 "      SystemsSearchPath 		: \""+systems_search_path+"\"\n"+
 "      DescriptionsSearchPath	: \""+descriptions_search_path+"\"")[0];
